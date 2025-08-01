@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,11 +15,27 @@ interface LoginForm {
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<LoginForm>();
 
-  const onSubmit = (data: LoginForm) => {
-    console.log("Login attempt:", data);
-    // TODO: Integrate with your MySQL database
+  const onSubmit = async (data: LoginForm) => {
+    setIsSubmitting(true);
+    try {
+      const success = await login(data.email, data.password);
+      if (success) {
+        const from = location.state?.from?.pathname || (data.email.includes('industrial') ? '/industrial' : '/');
+        navigate(from, { replace: true });
+      } else {
+        setError("root", { message: "Invalid email or password" });
+      }
+    } catch (error) {
+      setError("root", { message: "Login failed. Please try again." });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -91,8 +108,11 @@ const Login = () => {
           </CardContent>
           
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full">
-              Sign In
+            {errors.root && (
+              <div className="text-sm text-red-600 text-center">{errors.root.message}</div>
+            )}
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Signing In..." : "Sign In"}
             </Button>
             
             <div className="text-center text-sm">

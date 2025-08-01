@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,13 +22,33 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [userType, setUserType] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { signup } = useAuth();
+  const navigate = useNavigate();
   
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<SignupForm>();
+  const { register, handleSubmit, watch, formState: { errors }, setError } = useForm<SignupForm>();
   const password = watch("password");
 
-  const onSubmit = (data: SignupForm) => {
-    console.log("Signup attempt:", { ...data, userType });
-    // TODO: Integrate with your MySQL database
+  const onSubmit = async (data: SignupForm) => {
+    if (!userType) {
+      setError("root", { message: "Please select an account type" });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const success = await signup({ ...data, userType });
+      if (success) {
+        const redirectPath = userType === 'industrial' ? '/industrial' : '/';
+        navigate(redirectPath, { replace: true });
+      } else {
+        setError("root", { message: "Signup failed. Please try again." });
+      }
+    } catch (error) {
+      setError("root", { message: "Signup failed. Please try again." });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -171,8 +192,11 @@ const Signup = () => {
           </CardContent>
           
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full">
-              Create Account
+            {errors.root && (
+              <div className="text-sm text-red-600 text-center">{errors.root.message}</div>
+            )}
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Creating Account..." : "Create Account"}
             </Button>
             
             <div className="text-center text-sm">
