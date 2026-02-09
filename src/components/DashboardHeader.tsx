@@ -1,19 +1,17 @@
 
-import { Fish, Plus, Factory, LogOut, User } from "lucide-react";
+import { Fish, Plus, Factory, LogOut, User, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { AddFishLotModal } from "@/components/AddFishLotModal";
+import { useState } from "react";
 
 export const DashboardHeader = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-
-  const handleAddNewLot = () => {
-    console.log("Redirecting to add new lot...");
-    // This would typically navigate to a new route
-  };
+  const [showAddLot, setShowAddLot] = useState(false);
 
   const handleSwitchToIndustrial = () => {
     navigate("/industrial");
@@ -37,6 +35,14 @@ export const DashboardHeader = () => {
           
           <div className="flex items-center space-x-3">
             <Button 
+              onClick={() => navigate("/delivery")}
+              variant="outline"
+              className="bg-transparent border-white text-white hover:bg-white hover:text-blue-600"
+            >
+              <Truck className="h-4 w-4 mr-2" />
+              Deliveries
+            </Button>
+            <Button 
               onClick={handleSwitchToIndustrial}
               variant="outline"
               className="bg-transparent border-white text-white hover:bg-white hover:text-blue-600"
@@ -45,12 +51,13 @@ export const DashboardHeader = () => {
               Industrial View
             </Button>
             <Button 
-              onClick={handleAddNewLot}
+              onClick={() => setShowAddLot(true)}
               className="bg-white text-blue-600 hover:bg-blue-50 font-semibold"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add New Lot
             </Button>
+            <AddFishLotModal open={showAddLot} onOpenChange={setShowAddLot} />
             
             {user && (
               <DropdownMenu>
