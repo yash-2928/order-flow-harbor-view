@@ -1,5 +1,5 @@
 
-import { Factory, ShoppingCart, Fish, LogOut, User } from "lucide-react";
+import { Factory, ShoppingCart, Fish, LogOut, User, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
@@ -29,19 +29,35 @@ export const IndustrialHeader = () => {
     <header className="bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-lg">
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate("/industrial")}>
             <Factory className="h-8 w-8" />
             <div>
               <h1 className="text-2xl font-bold">Industrial Dashboard</h1>
-              <p className="text-slate-200">Browse and order fresh fish products</p>
+              <p className="text-slate-200 text-sm">Browse and order fresh fish products</p>
             </div>
           </div>
           
           <div className="flex items-center space-x-3">
+            <Button
+              onClick={() => navigate("/industrial/orders")}
+              variant="outline"
+              className="bg-transparent border-white/30 text-white hover:bg-white hover:text-slate-700"
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              Orders
+            </Button>
+            <Button
+              onClick={() => navigate("/industrial/catalog")}
+              variant="outline"
+              className="bg-transparent border-white/30 text-white hover:bg-white hover:text-slate-700"
+            >
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              Catalog
+            </Button>
             <Button 
               onClick={handleSwitchToFisherman}
               variant="outline"
-              className="bg-transparent border-white text-white hover:bg-white hover:text-slate-700"
+              className="bg-transparent border-white/30 text-white hover:bg-white hover:text-slate-700"
             >
               <Fish className="h-4 w-4 mr-2" />
               Fisherman View
