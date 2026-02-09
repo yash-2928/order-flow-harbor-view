@@ -8,6 +8,9 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import IndustrialView from "./pages/IndustrialView";
+import IndustrialDashboard from "./pages/IndustrialDashboard";
+import IndustrialOrders from "./pages/IndustrialOrders";
+import IndustrialOrderDetail from "./pages/IndustrialOrderDetail";
 import DeliveryView from "./pages/DeliveryView";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -37,7 +40,31 @@ const App = () => (
               path="/industrial" 
               element={
                 <ProtectedRoute allowedRoles={['industrial']}>
+                  <IndustrialDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/industrial/catalog" 
+              element={
+                <ProtectedRoute allowedRoles={['industrial']}>
                   <IndustrialView />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/industrial/orders" 
+              element={
+                <ProtectedRoute allowedRoles={['industrial']}>
+                  <IndustrialOrders />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/industrial/orders/:orderId" 
+              element={
+                <ProtectedRoute allowedRoles={['industrial']}>
+                  <IndustrialOrderDetail />
                 </ProtectedRoute>
               } 
             />
