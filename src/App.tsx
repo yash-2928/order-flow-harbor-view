@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
-import IndustrialView from "./pages/IndustrialView";
+import IndustrialCatalog from "./pages/IndustrialCatalog";
 import IndustrialDashboard from "./pages/IndustrialDashboard";
 import IndustrialOrders from "./pages/IndustrialOrders";
 import IndustrialOrderDetail from "./pages/IndustrialOrderDetail";
@@ -48,7 +48,7 @@ const App = () => (
               path="/industrial/catalog" 
               element={
                 <ProtectedRoute allowedRoles={['industrial']}>
-                  <IndustrialView />
+                  <IndustrialCatalog />
                 </ProtectedRoute>
               } 
             />
